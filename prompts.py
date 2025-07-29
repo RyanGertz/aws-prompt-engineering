@@ -602,14 +602,14 @@ def main():
     print("Educational examples for college students learning Python and AI")
     
     examples = [
-        # ("Testing Dials and Parameters", test_dials_and_parameters),
-        # ("Basic Structured Extraction", basic_extraction_example),
-        # ("Few-Shot Classification", few_shot_classification_example),
-        # ("Chain of Thought Reasoning", chain_of_thought_example),
-        # ("Synthetic Data Generation", synthetic_data_generation_example),
+        ("Testing Dials and Parameters", test_dials_and_parameters),
+        ("Basic Structured Extraction", basic_extraction_example),
+        ("Few-Shot Classification", few_shot_classification_example),
+        ("Chain of Thought Reasoning", chain_of_thought_example),
+        ("Synthetic Data Generation", synthetic_data_generation_example),
         ("ETL Data Processing", etl_processing_example),
-        # ("Advanced Prompting with Flags", advanced_prompt_with_flags_example),
-        # ("Comparative Analysis", comparison_analysis_example),
+        ("Advanced Prompting with Flags", advanced_prompt_with_flags_example),
+        ("Comparative Analysis", comparison_analysis_example),
     ]
     
     results = {}
