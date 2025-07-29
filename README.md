@@ -1,3 +1,5 @@
+
+![Prompting Flowchart](./flowchart.svg)
 # Prompt Engineering Advanced Techniques
 
 ## Welcome! 👋
