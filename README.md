@@ -138,23 +138,23 @@ Choosing the right model is crucial for balancing performance, cost, and speed:
 ### Model Categories
 
 ### Fast & Cheap
-**Use when:** you need ultra‑low cost, high throughput (simple classification, bulk extraction)  
-**Amazon Model:** Nova Micro — lowest latency, text-only, optimized for speed and minimal cost via Bedrock
-**Anthropic Model:** Claude 3.5 Haiku — fastest Claude variant, outperforms Claude 3 Opus on many tasks at lower cost
+- **Use when:** you need ultra‑low cost, high throughput (simple classification, bulk extraction)  
+- **Amazon Model:** Nova Micro — lowest latency, text-only, optimized for speed and minimal cost via Bedrock
+- **Anthropic Model:** Claude 3.5 Haiku — fastest Claude variant, outperforms Claude 3 Opus on many tasks at lower cost
 
 ---
 
 ### Balanced
-**Use when:** you want a balance of reasoning power and cost (creative writing, analysis, moderate complexity)  
-**Amazon Model:** Nova Pro — highly capable multimodal, strong accuracy/cost/speed trade‑off
-**Anthropic Model:** Claude 3.5 Sonnet — well‑rounded performer, midpoint of Claude family;
+- **Use when:** you want a balance of reasoning power and cost (creative writing, analysis, moderate complexity)  
+- **Amazon Model:** Nova Pro — highly capable multimodal, strong accuracy/cost/speed trade‑off
+- **Anthropic Model:** Claude 3.5 Sonnet — well‑rounded performer, midpoint of Claude family;
 
 ---
 
 ### Premium
-**Use when:** quality and reasoning depth matter most (coding, research, high‑stakes tasks)  
-**Anthropic Model:** Claude Sonnet 4 — latest-mid‑size Claude 4 model, superior instruction following, coding, large context support, and more accurate than 3.7 Sonnet
-**Amazon Model (optional higher tier):** Nova Premier — Amazon’s most capable multimodal model (targeted early 2025 release), ideal for complex reasoning and custom model distillation
+- **Use when:** quality and reasoning depth matter most (coding, research, high‑stakes tasks)  
+- **Anthropic Model:** Claude Sonnet 4 — latest-mid‑size Claude 4 model, superior instruction following, coding, large context support, and more accurate than 3.7 Sonnet
+- **Amazon Model (optional higher tier):** Nova Premier — Amazon’s most capable multimodal model (targeted early 2025 release), ideal for complex reasoning and custom model distillation
 
 
 ### Specialized Models
@@ -445,22 +445,9 @@ for text_response in survey_texts:
 4. **Break down complex tasks** - prompt chaining prevents confusion
 5. **Get structured data** - libraries like `instructor` turn AI into reliable data processors
 
-## 🛠️ Try It Yourself
-
-Your challenge: Create a prompt that:
-1. Uses few-shot examples
-2. Includes clear output formatting
-3. Solves a real problem you care about
-
-Remember: The best prompt engineers are made through experimentation, not perfection on the first try!
 
 ## 📚 Additional Resources
 
-Want to dive deeper? Check out these resources:
 - [Instructor Documentation](https://python.useinstructor.com/) - Complete guide to structured outputs
 - [OpenAI API Documentation](https://platform.openai.com/docs) - Official API reference
-- [Anthropic Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) - Comprehensive prompting strategies
-
-## 🤝 Contributing
-
-Found an error or have a suggestion? Feel free to open an issue or submit a pull request to improve this guide for future students!
+- [Anthropic Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
