@@ -610,7 +610,6 @@ def main():
             print("-" * 40)
             result = func()
             results[name] = result
-            print(f"✓ {name} completed successfully")
         except Exception as e:
             print(f"✗ {name} failed: {e}")
             results[name] = None
