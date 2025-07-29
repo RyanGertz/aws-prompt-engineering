@@ -1,7 +1,8 @@
 import boto3
 import time
-from typing import List, Literal, Dict
+from typing import List, Literal, Dict, Optional
 from pydantic import BaseModel, Field
+import pdfplumber
 import instructor
 
 
@@ -25,7 +26,17 @@ def retry_with_backoff(func, max_retries=3):
                 raise e
     return wrapper
 
-
+def extract_text_from_pdf(pdf_file_path: str) -> str:
+  """Extract text from PDF using pdfplumber"""
+  print(f"Extracting text from {pdf_file_path}...")
+  
+  extracted_text = ""
+  with pdfplumber.open(pdf_file_path) as pdf:
+    for page in pdf.pages:
+      text = page.extract_text()
+      if text:
+        extracted_text += text + "\n"
+  return extracted_text
 
 # =============================================================================
 # 0. TESTING DIALS AND PARAMETERS
@@ -338,24 +349,26 @@ def synthetic_data_generation_example():
 # 5. MULTI-STEP DATA PROCESSING (ETL EXAMPLE)
 # =============================================================================
 
-class CustomerFeedback(BaseModel):
-    """Model for processed customer feedback"""
-    customer_id: str = Field(description="Unique customer identifier")
-    feedback_type: Literal["Complaint", "Compliment", "Suggestion", "Question"] = Field(
-        description="Type of feedback"
-    )
-    sentiment: Literal["Very Negative", "Negative", "Neutral", "Positive", "Very Positive"] = Field(
-        description="Sentiment analysis"
-    )
-    urgency: int = Field(ge=1, le=5, description="Urgency level (1=low, 5=critical)")
-    main_topic: str = Field(description="Primary topic or department")
-    action_required: bool = Field(description="Whether follow-up action is needed")
-    summary: str = Field(description="Brief summary of the feedback")
+class Supervisor(BaseModel):
+  name: str = Field(description="Name of the supervisor")
+  district: str = Field(description="District the supervisor represents")
 
-class ProcessedFeedbackBatch(BaseModel):
-    """Collection of processed feedback"""
-    feedback_items: List[CustomerFeedback] = Field(description="Processed feedback items")
-    total_processed: int = Field(description="Total number of items processed")
+class SocialServicesItem(BaseModel):
+  item_number: str = Field(description="The item number on the agenda")
+  title_or_summary: str = Field(description="Short summary or title of the item")
+  districts: Optional[List[str]] = Field(description="List of districts mentioned, if specified")
+  type: str = Field(description="Type of agenda item, like 'Consent', 'Public Hearing', etc.")
+
+class ProcessedAgenda(BaseModel):
+  meeting_title: str = Field(description="The official meeting title")
+  date: str = Field(description="Date of the meeting, in YYYY-MM-DD format if possible")
+  location: str = Field(description="Where the meeting was held")
+  supervisors: List[Supervisor] = Field(description="List of supervisors with name and district")
+  all_section_titles: List[str] = Field(description="List of all section titles in the agenda")
+  social_services_items: List[SocialServicesItem] = Field(
+    description="Detailed agenda items related to social services"
+  )
+
 
 @retry_with_backoff
 def etl_processing_example():
@@ -368,31 +381,34 @@ def etl_processing_example():
     client = create_bedrock_client()
     
     # Raw, unstructured customer feedback (simulate real messy data)
-    raw_feedback = [
-        "CUST001: The delivery was AWFUL!!! 3 days late and the package was damaged. This is unacceptable!",
-        "Customer #CUST002 says: Love the new website design, very user-friendly and fast!",
-        "CUST003 - Question about return policy: Can I return items after 60 days if unopened?",
-        "From CUST004: Suggestion - you should add more payment options like crypto",
-        "CUST005 feedback: Product quality is okay but customer service was rude to me yesterday"
-    ]
+    pdf_text = extract_text_from_pdf("Board-of-Supervisors-Agenda.pdf")
     
     # ETL prompt for batch processing
     prompt = f"""
-    Process this batch of raw customer feedback into structured data.
-    
-    Raw feedback data:
-    {chr(10).join(raw_feedback)}
-    
-    For each feedback item, extract and standardize:
-    1. Customer ID (extract from the text)
-    2. Classify the feedback type
-    3. Analyze sentiment (be nuanced - consider intensity)
-    4. Assign urgency level based on tone and content
-    5. Identify the main topic/department
-    6. Determine if follow-up action is needed
-    7. Create a professional summary
-    
-    Transform inconsistent data into clean, structured format suitable for database storage.
+    Please analyze the following document text and extract key information into a structured JSON format.
+
+    Return an object with the following fields:
+
+    - meeting_title
+    - date
+    - location
+    - supervisors (list of names and districts)
+
+    - all_section_titles: a list of all agenda section titles in the document
+
+    - social_services_items: a list of detailed items specifically related to Social Services. These may appear in a section titled "Social Services" or be items that address social services topics such as welfare, benefits, homelessness, housing support, child services, etc.
+
+    Each item in social_services_items should strictly include:
+      - item_number
+      - title or summary
+      - districts (if specified)
+      - type (e.g. "Consent", "Public Hearing", "Presentation", etc.)
+    do not include anything else for an item. 
+
+    Return only valid JSON. Do not include any explanatory text.
+
+    Document text:
+    {pdf_text}
     """
     
     try:
@@ -400,20 +416,14 @@ def etl_processing_example():
             modelId="anthropic.claude-3-5-sonnet-20241022-v2:0",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=2000,
-            temperature=0.3,  # Balanced temperature for processing
-            response_model=ProcessedFeedbackBatch,
+            temperature=0.5,  # Balanced temperature for processing
+            response_model= ProcessedAgenda,
         )
         
-        print(f"Processed {result.total_processed} feedback items:")
         print("-" * 60)
         
-        for feedback in result.feedback_items:
-            print(f"Customer: {feedback.customer_id}")
-            print(f"Type: {feedback.feedback_type} | Sentiment: {feedback.sentiment}")
-            print(f"Urgency: {feedback.urgency}/5 | Topic: {feedback.main_topic}")
-            print(f"Action Needed: {'Yes' if feedback.action_required else 'No'}")
-            print(f"Summary: {feedback.summary}")
-            print("-" * 40)
+        with open("processed_etl_agenda.json", "w") as f:
+            f.write(result.model_dump_json(indent=2))
         
         return result
         
@@ -592,14 +602,14 @@ def main():
     print("Educational examples for college students learning Python and AI")
     
     examples = [
-        ("Testing Dials and Parameters", test_dials_and_parameters),
-        ("Basic Structured Extraction", basic_extraction_example),
-        ("Few-Shot Classification", few_shot_classification_example),
-        ("Chain of Thought Reasoning", chain_of_thought_example),
-        ("Synthetic Data Generation", synthetic_data_generation_example),
+        # ("Testing Dials and Parameters", test_dials_and_parameters),
+        # ("Basic Structured Extraction", basic_extraction_example),
+        # ("Few-Shot Classification", few_shot_classification_example),
+        # ("Chain of Thought Reasoning", chain_of_thought_example),
+        # ("Synthetic Data Generation", synthetic_data_generation_example),
         ("ETL Data Processing", etl_processing_example),
-        ("Advanced Prompting with Flags", advanced_prompt_with_flags_example),
-        ("Comparative Analysis", comparison_analysis_example),
+        # ("Advanced Prompting with Flags", advanced_prompt_with_flags_example),
+        # ("Comparative Analysis", comparison_analysis_example),
     ]
     
     results = {}
