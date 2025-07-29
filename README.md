@@ -136,21 +136,29 @@ Combine external knowledge with the model's built-in knowledge. You retrieve rel
 Choosing the right model is crucial for balancing performance, cost, and speed:
 
 ### Model Categories
-- **Fast & Cheap**: GPT-3.5 Turbo, Claude Haiku, Llama 3.1 8B
-  - Great for: Simple tasks, classification, data extraction
-  - Use when: Processing large volumes, tight budgets
-  
-- **Balanced**: GPT-4, Claude Sonnet
-  - Great for: Most complex tasks, analysis, creative writing
-  - Use when: Quality matters more than speed
-  
-- **Premium**: GPT-4 Turbo, Claude Opus, O1-Preview
-  - Great for: Complex reasoning, research, high-stakes tasks
-  - Use when: You need the absolute best results
+
+### Fast & Cheap
+**Use when:** you need ultra‑low cost, high throughput (simple classification, bulk extraction)  
+**Amazon Model:** Nova Micro — lowest latency, text-only, optimized for speed and minimal cost via Bedrock
+**Anthropic Model:** Claude 3.5 Haiku — fastest Claude variant, outperforms Claude 3 Opus on many tasks at lower cost
+
+---
+
+### Balanced
+**Use when:** you want a balance of reasoning power and cost (creative writing, analysis, moderate complexity)  
+**Amazon Model:** Nova Pro — highly capable multimodal, strong accuracy/cost/speed trade‑off
+**Anthropic Model:** Claude 3.5 Sonnet — well‑rounded performer, midpoint of Claude family;
+
+---
+
+### Premium
+**Use when:** quality and reasoning depth matter most (coding, research, high‑stakes tasks)  
+**Anthropic Model:** Claude Sonnet 4 — latest-mid‑size Claude 4 model, superior instruction following, coding, large context support, and more accurate than 3.7 Sonnet
+**Amazon Model (optional higher tier):** Nova Premier — Amazon’s most capable multimodal model (targeted early 2025 release), ideal for complex reasoning and custom model distillation
+
 
 ### Specialized Models
-- **Code**: GitHub Copilot, CodeLlama, GPT-4 (code-optimized)
-- **Embeddings**: text-embedding-ada-002, sentence-transformers
+- **Embeddings**: Amazon Titan Text Embedding v2, Cohere embed
 - **Image**: DALL-E, Midjourney, Stable Diffusion
 
 ## 📊 Classification Techniques
@@ -165,10 +173,6 @@ Examples:
 "Amazing product, love it!" → Positive
 "Terrible quality, waste of money" → Negative
 "It's okay, nothing special" → Neutral
-
-Your turn:
-"The delivery was fast but the product broke immediately" → ?
-```
 
 ### Multi-Label Classification
 ```
