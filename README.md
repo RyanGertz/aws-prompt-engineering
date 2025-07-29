@@ -1,34 +1,21 @@
 # Prompt Engineering Advanced Techniques
-*AI Summer Camp - Advanced Session*
 
 ## Welcome! 👋
 
-This guide covers advanced prompt engineering techniques that will help you get better, more reliable results from AI models. Whether you're working with OpenAI's GPT models, Anthropic's Claude, or other LLMs, these techniques will make you a more effective AI user.
-
-## What You'll Learn
-
-By the end of this session, you'll understand how to make AI models work better for you through smart prompting techniques, parameter tuning, and structured outputs. Think of this as learning to "speak AI" more fluently!
-
-## 🎯 Getting Started
-
-Before diving in, make sure you have:
-- Access to an AI model API (OpenAI, Anthropic, etc.)
-- Basic Python knowledge (we'll show you the code, don't worry!)
-- Curiosity and willingness to experiment
-
----
+This guide covers advanced prompt engineering techniques that will help you get better, more reliable results from AI models tailored to your specific use case.
 
 ## 🎛️ Understanding Model Parameters
 
 Before we dive into prompting, let's understand the "knobs and dials" that control how AI models behave.
 
-### Temperature (0-1)
+### Temperature (Number 0-1)
+- Tells the model to pick words that have a lower/higher probability of appearing
 - **Low (0-0.3)**: Predictable, focused responses
 - **High (0.7-1.0)**: Creative, varied responses
-- **Example**: Ask "What's a good pizza topping?" at temp 0.1 vs 0.9
 
-### Top P (Nucleus Sampling)
+### Top P (Nucleus Sampling, Number 0-1)
 Controls which words the model considers based on probability.
+Chooses words that have probabilites adding up to your Top P
 - **Example**: "Today I went to the [park: 50%, store: 30%, moon: 10%, library: 10%]"
 - **Top P = 0.8**: Only considers "park" and "store" (80% combined)
 - **Lower values = more focused responses**
@@ -36,11 +23,13 @@ Controls which words the model considers based on probability.
 ### Top K
 Simply limits to the K most likely next words.
 - **Top K = 5**: Only considers the 5 most probable words
-- **Use either Top P OR Top K, not both**
+- **Use either Temperature, Top P OR Top K, not all at the same time**
 
 ### Other Useful Parameters
 - **Max Length**: Stop after X tokens
 - **Stop Sequences**: Stop when model outputs specific text (like "END" or "---")
+- **Penalties**: Decreases a words probability each time it gets used to avoid repetitive sentences
+
 
 ---
 
@@ -81,22 +70,28 @@ Format you want back.
 
 ---
 
-## 🚀 Advanced Prompting Techniques
+## Prompting Techniques
 
 ### Few-Shot Prompting
 Give the model examples to learn from:
 
 ```
-Classify these movie reviews as positive or negative:
+Classify the movie in <movie> as Positive or Negative:
 
+<Examples>
+Example 1:
 Review: "Amazing cinematography and great acting!" 
 Sentiment: Positive
 
+Example 2:
 Review: "Boring plot, terrible dialogue."
 Sentiment: Negative
+</Examples>
 
+<movie>
 Review: "The special effects were incredible but the story dragged."
 Sentiment: [model completes this]
+</movie>
 ```
 
 ### Chain of Thought Prompting
