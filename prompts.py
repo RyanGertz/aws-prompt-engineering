@@ -1,8 +1,6 @@
 import boto3
-import json
 import time
-from typing import List, Literal, Optional, Dict, Any
-from datetime import date, datetime
+from typing import List, Literal, Dict
 from pydantic import BaseModel, Field
 import instructor
 
@@ -26,6 +24,44 @@ def retry_with_backoff(func, max_retries=3):
                     continue
                 raise e
     return wrapper
+
+
+
+# =============================================================================
+# 0. TESTING DIALS AND PARAMETERS
+# =============================================================================
+
+@retry_with_backoff
+def test_dials_and_parameters():
+    """
+    Test different dials and parameters for the Bedrock model
+    This is a simple test to ensure the model can handle various settings
+    Please feel free to modify the prompt and parameters!!
+    """
+    print("\n=== Testing Dials and Parameters ===")
+    
+    client = boto3.client("bedrock-runtime", region_name="us-west-2")
+
+    prompt = "Give me a short response to this question: What is the meaning of life?"
+
+    try:
+        result = client.converse(
+            modelId="anthropic.claude-3-5-sonnet-20241022-v2:0",
+            messages=[{"role": "user", "content": [{"text": prompt}]}],
+            inferenceConfig={  
+                'temperature': 0.7,  # temperature for creativity
+                'topP': 1,  # Use top-p sampling
+                'stopSequences': ["<END>"],
+            }
+        )
+        
+        print(f"Response: {result['output']['message']['content'][0]['text']}")
+        return result
+        
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
 
 # =============================================================================
 # 1. BASIC STRUCTURED OUTPUT WITH INSTRUCTOR
@@ -556,6 +592,7 @@ def main():
     print("Educational examples for college students learning Python and AI")
     
     examples = [
+        ("Testing Dials and Parameters", test_dials_and_parameters),
         ("Basic Structured Extraction", basic_extraction_example),
         ("Few-Shot Classification", few_shot_classification_example),
         ("Chain of Thought Reasoning", chain_of_thought_example),
