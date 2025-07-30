@@ -25,7 +25,7 @@ Chooses words that have probabilites adding up to your Top P
 ### Top K
 Simply limits to the K most likely next words.
 - **Top K = 5**: Only considers the 5 most probable words
-- **Use either Temperature, Top P OR Top K, not all at the same time**
+- **Use either Temperature OR Top P OR Top K, not all at the same time**
 
 ### Other Useful Parameters
 - **Max Length**: Stop after X tokens
