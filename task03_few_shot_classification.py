@@ -9,15 +9,20 @@ class EmailClassification(BaseModel):
     category: Literal["Spam", "Important", "Personal", "Work", "Promotional"] = Field(
         description="Primary email category"
     )
-    urgency: Literal["Low", "Medium", "High"] = Field(description="Urgency level")
-    confidence: float = Field(
-        ge=0.0, le=1.0, description="Confidence in classification"
-    )
     reasoning: str = Field(description="Brief explanation of classification")
+    urgency: Literal["Low", "Medium", "High"] = Field(description="Urgency level")
 
 
 @retry_with_backoff
 def few_shot_classification_example():
+    """
+    Give a model a small number of examples to derive a pattern.
+
+    Tasks:
+    - Define some examples of "correct" decisions the model should make.
+    - Test your examples using the test email. Change the content; how does the output change?
+    """
+
     print("\n=== Example 2: Few-Shot Email Classification ===")
 
     client = create_bedrock_client()
@@ -41,28 +46,6 @@ def few_shot_classification_example():
     Classify emails into categories based on these examples:
     
     EXAMPLES:
-    
-    Example 1:
-    Subject: "Free iPhone! Click now!"
-    From: "winner@random-site.com"
-    Category: Spam
-    Urgency: Low
-    Reasoning: Obvious spam with suspicious sender and unrealistic offer
-    
-    Example 2:
-    Subject: "Meeting moved to 2 PM"
-    From: "boss@company.com"
-    Category: Work
-    Urgency: High
-    Reasoning: Work-related schedule change from supervisor
-    
-    Example 3:
-    Subject: "Happy Birthday!"
-    From: "mom@email.com"
-    Category: Personal
-    Urgency: Low
-    Reasoning: Personal message from family member
-    
     Now classify this email:
     {test_email}
     """
@@ -74,11 +57,10 @@ def few_shot_classification_example():
             max_tokens=800,
             temperature=0.2,
             response_model=EmailClassification,
-        )
+        )  # type: ignore
 
         print(f"Category: {result.category}")
         print(f"Urgency: {result.urgency}")
-        print(f"Confidence: {result.confidence:.2f}")
         print(f"Reasoning: {result.reasoning}")
         return result
 
