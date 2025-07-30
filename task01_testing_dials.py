@@ -5,24 +5,28 @@ from utils import retry_with_backoff
 @retry_with_backoff
 def test_dials_and_parameters():
     """
-    Test different dials and parameters for the Bedrock model
-    This is a simple test to ensure the model can handle various settings
-    Please feel free to modify the prompt and parameters!!
+    Introduce the main API call we'll be using.
     """
     print("\n=== Testing Dials and Parameters ===")
 
     client = boto3.client("bedrock-runtime", region_name="us-west-2")
 
-    prompt = "Give me a short response to this question: What is the meaning of life?"
+    # Pre-prepared prompt for testing
+    prompt = """You are a helpful AI assistant. Please provide a creative and engaging response to the following question:
+
+Question: What are three innovative ways that artificial intelligence could help solve climate change in the next decade?
+
+Please structure your response with clear bullet points and keep it concise but informative."""
 
     try:
         result = client.converse(
             modelId="anthropic.claude-3-5-sonnet-20241022-v2:0",
             messages=[{"role": "user", "content": [{"text": prompt}]}],
             inferenceConfig={
-                "temperature": 0.7,  # temperature for creativity
-                "topP": 1,  # Use top-p sampling
-                "stopSequences": ["<END>"],
+                "temperature": 0.8,  # Higher temperature for more creative responses
+                "topP": 0.9,  # Top-p sampling for controlled randomness
+                "maxTokens": 500,  # Limit response length
+                "stopSequences": ["<END>", "###"],
             },
         )
 
