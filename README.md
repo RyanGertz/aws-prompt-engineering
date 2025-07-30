@@ -111,9 +111,9 @@ Think through this step by step:
 ### Prompt Chaining
 Break complex tasks into smaller steps, where each prompt builds on the previous output.
 
-**Step 1**: "List the main characters in this story"
-**Step 2**: "For each character from the previous list, describe their motivation"
-**Step 3**: "Identify conflicts between these characters based on their motivations"
+- **Step 1**: "List the main characters in this story"
+- **Step 2**: "For each character from the previous list, describe their motivation"
+- **Step 3**: "Identify conflicts between these characters based on their motivations"
 
 ### Tree of Thought
 Let the model explore multiple approaches and pick the best one:
