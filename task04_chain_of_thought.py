@@ -31,6 +31,10 @@ def chain_of_thought_example():
     what was their revenue at the end of Q3?
     """
 
+    # TODO: give the model some steps you'd like to see it take to arrive
+    # at a conclusion. What reasoning process might improve your chances
+    # of success?
+
     # Prompt explicitly asking for step-by-step thinking
     prompt = f"""
     Solve this business math problem step by step. Show your reasoning clearly:
@@ -38,7 +42,6 @@ def chain_of_thought_example():
     Problem: {math_problem}
     
     Think through this systematically:
-    < FILL IN SOME REASONING STEPS HERE >
     
     Be precise with calculations and show intermediate results.
     """

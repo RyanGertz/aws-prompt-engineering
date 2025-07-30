@@ -11,6 +11,8 @@ def test_dials_and_parameters():
 
     client = boto3.client("bedrock-runtime", region_name="us-west-2")
 
+    # TODO: change the prompt and some settings to get an understanding of how the API works.
+
     # Pre-prepared prompt for testing
     prompt = """You are a helpful AI assistant. Please provide a creative and engaging response to the following question:
 

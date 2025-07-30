@@ -5,7 +5,8 @@ from utils import create_bedrock_client, retry_with_backoff, extract_text_from_p
 
 class ProcessedPaper(BaseModel):
     """
-    TODO: define the outputs you want to extract from the paper here.
+    TODO: define the outputs you want to extract from the paper here,
+    using components of old PyDantic models.
     """
 
 
@@ -18,7 +19,8 @@ def etl_processing_example():
 
     client = create_bedrock_client()
 
-    # TODO: download a PDF you want to extract text from.
+    # TODO: download a PDF you want to extract text from and point to it
+    # using its path here.
     pdf_text = extract_text_from_pdf(pdf_file_path="")
 
     # TODO: define your extraction prompt here!

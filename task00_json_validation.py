@@ -12,7 +12,7 @@ class UserProfile(BaseModel):
     user_id: str = Field(
         description="User ID - must be under 32 chars, lowercase and dashes only"
     )
-    age: int = Field(ge=13, le=120, description="User age between 13 and 120")  # type: ignore
+    age: int = Field(ge=13, le=120, description="User age between 13 and 120")
     email: EmailStr = Field(description="Valid email address")
     preferences: List[str] = Field(description="User preferences list")
     status: Literal["active", "inactive", "pending"] = Field(
@@ -47,6 +47,8 @@ def json_validation_example():
         "status": "active"
     }
     """
+
+    # TODO: why doesn't the model validate this JSON object?
 
     print("Original JSON string:")
     print(json_string)

@@ -11,19 +11,21 @@ class MovieReview(BaseModel):
     sentiment: Literal["Positive", "Negative", "Neutral"] = Field(
         description="Overall sentiment"
     )
-    rating: float = Field(ge=1.0, le=10.0, description="Rating out of 10")
+    rating: float = Field(ge=1.0, le=10.0, description="Rating out of 10")  # type: ignore
     key_points: List[str] = Field(description="Main points mentioned in review")
 
 
 @retry_with_backoff
 def basic_extraction_example():
     """
-    Example 1: Basic structured data extraction
-    Shows how to extract structured information from unstructured text
+    Introduce automated extraction of structured data from unstructured prose.
     """
     print("\n=== Example 1: Basic Structured Extraction ===")
 
     client = create_bedrock_client()
+
+    # TODO: Add to the fields you'd like to extract or change the review text to see
+    # how the output changes.
 
     review_text = """
     I watched The Matrix last night and wow! The special effects were groundbreaking 

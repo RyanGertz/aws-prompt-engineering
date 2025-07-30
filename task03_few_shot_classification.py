@@ -17,10 +17,6 @@ class EmailClassification(BaseModel):
 def few_shot_classification_example():
     """
     Give a model a small number of examples to derive a pattern.
-
-    Tasks:
-    - Define some examples of "correct" decisions the model should make.
-    - Test your examples using the test email. Change the content; how does the output change?
     """
 
     print("\n=== Example 2: Few-Shot Email Classification ===")
@@ -32,14 +28,11 @@ def few_shot_classification_example():
     Subject: URGENT: System maintenance tonight
     From: it-team@company.com
     
-    Hi everyone,
-    
-    We will be performing critical system maintenance tonight from 11 PM to 3 AM.
-    All services will be unavailable during this time. Please plan accordingly.
-    
-    Thanks,
     IT Team
     """
+
+    # TODO: give the model a few examples of "right answers". Try changing the input emails.
+    # What examples might help cover some edge cases?
 
     # Few-shot prompt with clear examples
     prompt = f"""
