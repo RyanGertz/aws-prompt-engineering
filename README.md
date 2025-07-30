@@ -175,7 +175,7 @@ Examples:
 "Amazing product, love it!" → Positive
 "Terrible quality, waste of money" → Negative
 "It's okay, nothing special" → Neutral
-
+```
 ### Multi-Label Classification
 ```
 Classify this email into categories (can be multiple):
@@ -287,24 +287,6 @@ Include diverse demographics, occupations, and interests.
 ## ⚙️ Parsing and ETL (Extract, Transform, Load)
 
 Transform messy, unstructured data into clean, usable formats:
-
-### Email Parsing
-```python
-class EmailData(BaseModel):
-    sender: str
-    subject: str
-    priority: str  # High, Medium, Low
-    action_required: bool
-    deadline: Optional[str]
-    categories: List[str]
-
-# Extract structured data from email text
-prompt = """
-Parse this email and extract key information:
-[email content here]
-"""
-```
-
 ### Document Processing Pipeline
 ```python
 # Step 1: Extract text sections
@@ -331,69 +313,19 @@ Table: project_reports
 Columns: title, summary, findings, budget, priority
 """
 ```
-
-### Web Scraping Data Cleanup
-```python
-class ProductInfo(BaseModel):
-    name: str
-    price: float
-    rating: float
-    features: List[str]
-    availability: str
-
-# Clean messy scraped product data
-prompt = """
-Clean and structure this scraped product data:
-[messy HTML/text content]
-
-Extract: name, price, rating, key features, stock status
-Handle: missing values, price variations, rating formats
-"""
-```
-
-### Real-World ETL Example
-```python
-# Processing customer feedback from multiple sources
-class FeedbackRecord(BaseModel):
-    source: str  # email, survey, social_media
-    sentiment: str
-    topic: str
-    urgency: int  # 1-5 scale
-    customer_tier: str
-    resolution_needed: bool
-
-# Pipeline for processing hundreds of feedback items
-def process_feedback_batch(raw_feedback_list):
-    processed_records = []
-    
-    for raw_text in raw_feedback_list:
-        structured = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            response_model=FeedbackRecord,
-            messages=[{
-                "role": "user", 
-                "content": f"Process this customer feedback: {raw_text}"
-            }]
-        )
-        processed_records.append(structured)
-    
-    return processed_records
-```
-
 ---
 
-## 🐍 Structured Output with Python's Instructor Library
+## Structured Output with Python's Instructor Library
 
 The `instructor` library helps you get reliable, structured data from AI models instead of just text.
 
 ### Basic Setup
 ```python
 import instructor
-from openai import OpenAI
-from pydantic import BaseModel
+import boto3
 
-# Wrap your OpenAI client
-client = instructor.from_openai(OpenAI())
+bedrock_client = boto3.client("bedrock-runtime", region_name="us-west-2")
+client = instructor.from_bedrock(bedrock_client)
 
 class Person(BaseModel):
     name: str
@@ -401,13 +333,11 @@ class Person(BaseModel):
     occupation: str
 
 # Get structured output
-person = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    response_model=Person,
-    messages=[
-        {"role": "user", "content": "Extract info: John is 25 and works as a teacher"}
-    ]
-)
+response = client.chat.completions.create(
+      modelId="anthropic.claude-3-5-sonnet-20241022-v2:0",
+      messages=[{"role": "user", "content": "Extract info: John is 25 and works as a teacher"}],
+      response_model=Person,
+    )
 
 print(person.name)  # "John"
 print(person.age)   # 25
@@ -418,24 +348,6 @@ print(person.age)   # 25
 - **Perfect for ETL pipelines** (Extract, Transform, Load)
 - **Synthetic data generation** with guaranteed structure
 - **No more parsing headaches** with inconsistent text formats
-
-### Real-World Example: Processing Survey Responses
-```python
-class SurveyResponse(BaseModel):
-    satisfaction_score: int  # 1-5 scale
-    main_complaint: str
-    would_recommend: bool
-
-# Process hundreds of text responses into clean data
-responses = []
-for text_response in survey_texts:
-    structured = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        response_model=SurveyResponse,
-        messages=[{"role": "user", "content": f"Analyze: {text_response}"}]
-    )
-    responses.append(structured)
-```
 
 ---
 
