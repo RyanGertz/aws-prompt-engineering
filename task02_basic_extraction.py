@@ -1,6 +1,7 @@
 from typing import List, Literal
 from pydantic import BaseModel, Field
 from utils import create_bedrock_client, retry_with_backoff
+import json
 
 
 class MovieReview(BaseModel):
@@ -36,9 +37,7 @@ def basic_extraction_example():
     Analyze this movie review and extract key information:
     
     Review: {review_text}
-    
-    Extract the movie title, overall sentiment, rating, and main points discussed.
-    """
+    """  # No tedious specification of fields necessary!
 
     try:
         result = client.chat.completions.create(
@@ -53,6 +52,12 @@ def basic_extraction_example():
         print(f"Sentiment: {result.sentiment}")
         print(f"Rating: {result.rating}/10")
         print(f"Key Points: {', '.join(result.key_points)}")
+
+        print()
+
+        print("Represented as JSON:")
+        print(json.dumps(result.model_dump(), indent=2))
+
         return result
 
     except Exception as e:
